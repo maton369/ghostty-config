@@ -1,6 +1,7 @@
 #!/bin/bash
-# Setup Ghostty config on a new Mac.
+# Setup Ghostty config on macOS.
 # Run once after cloning this repo to ~/.config/ghostty/
+# For Windows, use setup-windows.ps1 instead.
 
 set -e
 
