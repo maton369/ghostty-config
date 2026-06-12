@@ -1,80 +1,80 @@
-# Ghostty Shader Theme System
+# Ghostty シェーダーテーマシステム
 
-A collection of 23 background shader themes and 4 cursor effect presets for the [Ghostty](https://ghostty.org/) terminal emulator, with a theme switcher that cycles through them via keybindings.
+[Ghostty](https://ghostty.org/) ターミナル用の背景シェーダーテーマ 23 種とカーソルエフェクトプリセット 4 種を、キーバインドで切り替えられる仕組みです。
 
-Works on **macOS** (Ghostty) and **Windows** ([Winghostty](https://github.com/amanthanvi/winghostty)).
+**macOS** (Ghostty) と **Windows** ([Winghostty](https://github.com/amanthanvi/winghostty)) に対応しています。
 
-## Features
+## 機能
 
-- 23 animated background themes switchable at runtime
-- 4 cursor effect presets (independently switchable)
-- Automatic shader disable when opening editors (nvim/vim/vi)
-- Starship prompt integration (shows current theme and keybinding hints)
-- Cross-platform: macOS setup script + Windows PowerShell setup script
+- 23 種のアニメーション背景テーマをランタイムで切り替え
+- 4 種のカーソルエフェクトプリセット（背景テーマとは独立して切り替え可能）
+- エディタ起動時にシェーダーを自動オフ（nvim / vim / vi）
+- Starship プロンプト連携（現在のテーマ名・キーバインドのヒントを表示）
+- クロスプラットフォーム：macOS 用 bash スクリプト＋Windows 用 PowerShell スクリプト
 
-## Background Themes
+## 背景テーマ一覧
 
-Themes are cycled with `Ctrl+N` (next) / `Ctrl+P` (prev) on macOS.
+macOS では `Ctrl+N`（次）/ `Ctrl+P`（前）で切り替えます。
 
-| Theme | Effect | Category |
-|-------|--------|----------|
-| space | Colorful starfield + black hole | Space |
-| pipboy | Fallout Pip-Boy green phosphor CRT | CRT/Retro |
-| retro-term | Barrel distortion + scanlines + cyan-green tint | CRT/Retro |
-| bettercrt | Barrel distortion + scanlines | CRT/Retro |
-| game-crt | Cinematic CRT (aperture grille, ghosting, bloom) | CRT/Retro |
-| crt | Classic CRT scanlines | CRT/Retro |
-| rgbsplit | Chromatic aberration + pulsing glow | CRT/Retro |
-| tft | TFT/LCD screen door overlay | CRT/Retro |
-| dither | Ordered dithering (Bayer matrix posterization) | CRT/Retro |
-| noir | Film noir (venetian blinds, smoke wisps, flicker) | CRT/Retro |
-| water | Underwater caustic light patterns + text distortion | Nature |
-| snow | Falling snow with parallax depth layers | Nature |
-| sakura | Cherry blossom petals falling + moonlight | Nature |
-| fire | Flames + rising sparks | Nature |
-| liquid | Iridescent flowing caustic ridges | Nature |
-| gradient | Slowly cycling color gradient | Ambient |
-| cyberpunk | Synthwave + VHS glitch + pixel bug | Ambient |
-| neon-vhs | VHS tracking glitch + neon bloom | Ambient |
-| matrix | Falling green character rain | Ambient |
-| gears | Industrial gears, belts, and gauges | Ambient |
-| fireworks | Animated firework explosions | Ambient |
-| pjsk | Project Sekai-style rotating crystal shards | Ambient |
-| minimal | No background shader | - |
+| テーマ | 効果 | カテゴリ |
+|--------|------|----------|
+| space | カラフル星空＋ブラックホール | 宇宙 |
+| pipboy | Fallout Pip-Boy 風グリーン CRT | CRT / レトロ |
+| retro-term | 樽型歪み＋走査線＋シアン色 | CRT / レトロ |
+| bettercrt | 樽型歪み＋走査線 | CRT / レトロ |
+| game-crt | ゲーム風 CRT（アパーチャグリル・ゴースト・ブルーム） | CRT / レトロ |
+| crt | クラシック CRT 走査線 | CRT / レトロ |
+| rgbsplit | 色収差＋脈動するグロー | CRT / レトロ |
+| tft | TFT/LCD スクリーンドア効果 | CRT / レトロ |
+| dither | 順序ディザリング（バイヤー行列ポスタライズ） | CRT / レトロ |
+| noir | フィルム・ノワール（ブラインド影・煙・フリッカー） | CRT / レトロ |
+| water | 水中コースティクス＋テキスト歪み | 自然 |
+| snow | パララックスで降る雪 | 自然 |
+| sakura | 桜の花びらが舞い落ちる＋月光 | 自然 |
+| fire | 炎＋上昇する火の粉 | 自然 |
+| liquid | 虹色に流れるコースティクス光 | 自然 |
+| gradient | ゆっくり変化する色グラデーション | 雰囲気 |
+| cyberpunk | シンセウェーブ＋VHS グリッチ＋ドット絵の虫 | 雰囲気 |
+| neon-vhs | VHS トラッキングノイズ＋ネオンブルーム | 雰囲気 |
+| matrix | 緑色の文字が降る雨 | 雰囲気 |
+| gears | 歯車・ベルト・メーター | 雰囲気 |
+| fireworks | 打ち上げ花火 | 雰囲気 |
+| pjsk | プロセカ風の回転する結晶片 | 雰囲気 |
+| minimal | シェーダーなし | - |
 
-CRT/retro themes that warp the screen geometry (pipboy, retro-term, bettercrt, game-crt, crt) use the `fx_first` flag to draw cursor effects before the warp shader, keeping sparks aligned with the cursor.
+画面を幾何学的に歪める CRT 系テーマ（pipboy, retro-term, bettercrt, game-crt, crt）では `fx_first` フラグにより、カーソルエフェクトを歪みシェーダーの前に描画し、火花がカーソル位置とずれないようにしています。
 
-## Cursor Effect Presets
+## カーソルエフェクトプリセット
 
-Cursor effects are cycled independently with `Ctrl+F` (next) / `Ctrl+B` (prev) on macOS.
+macOS では `Ctrl+F`（次）/ `Ctrl+B`（前）で独立して切り替えます。
 
-| Preset | Effect |
-|--------|--------|
-| particles | Blaze trail + lightning + sparks + slash + gravity |
-| electric | Lightning arcs that scale with typing speed |
-| aurora | Rotating gradient glow around the terminal border |
-| none | No cursor effects |
+| プリセット | 効果 |
+|-----------|------|
+| particles | 炎の軌跡＋稲妻＋火花＋斬撃＋重力パーティクル |
+| electric | タイピング速度に応じた稲妻アーク |
+| aurora | ターミナル枠を回転するグラデーション光 |
+| none | カーソルエフェクトなし |
 
-## Setup
+## セットアップ
 
 ### macOS (Ghostty)
 
-> **Prerequisites:** [Ghostty](https://ghostty.org/) installed.
+> **前提条件:** [Ghostty](https://ghostty.org/) がインストール済みであること。
 
 ```bash
-# 1. Clone to Ghostty config directory
+# 1. Ghostty の設定ディレクトリにクローン
 git clone https://github.com/maton369/ghostty-config.git ~/.config/ghostty
 
-# 2. Run setup (clones blackhole shader, generates config)
+# 2. セットアップ実行（ブラックホールシェーダーのクローン・設定ファイル生成）
 ~/.config/ghostty/setup.sh
 
-# 3. Restart Ghostty (Cmd+Q, then reopen)
+# 3. Ghostty を再起動（Cmd+Q してから再度開く）
 ```
 
-The setup script prints zsh keybinding snippets to add to `~/.zshrc`:
+セットアップスクリプトが `~/.zshrc` に追加するキーバインド設定を出力します：
 
 ```zsh
-# Ghostty shader toggle for editors
+# エディタ起動時にシェーダーをオフにする
 _ghostty_shaders_toggle="$HOME/.config/ghostty/shaders-toggle.sh"
 for _cmd in nvim vim vi; do
   eval "function ${_cmd} {
@@ -84,7 +84,7 @@ for _cmd in nvim vim vi; do
   }"
 done
 
-# Ghostty theme/fx cycling
+# テーマ・エフェクト切り替え
 _ghostty_theme="$HOME/.config/ghostty/shader-theme.sh"
 function _ghostty_next_theme { local n; n=$("$_ghostty_theme" next 2>/dev/null); zle -M "theme: $n"; zle reset-prompt; }
 function _ghostty_prev_theme { local n; n=$("$_ghostty_theme" prev 2>/dev/null); zle -M "theme: $n"; zle reset-prompt; }
@@ -96,9 +96,9 @@ bindkey '^n' _ghostty_next_theme; bindkey '^p' _ghostty_prev_theme
 bindkey '^f' _ghostty_next_fx; bindkey '^b' _ghostty_prev_fx
 ```
 
-#### Optional: Starship prompt integration
+#### オプション：Starship プロンプト連携
 
-Add to `~/.config/starship.toml` to show the current theme and cursor preset in the right prompt:
+`~/.config/starship.toml` に追加すると、右プロンプトに現在のテーマとプリセット名が表示されます：
 
 ```toml
 right_format = "${custom.shader} ${custom.fx}"
@@ -118,86 +118,86 @@ format = "[⚡ $output ^F/^B](dimmed white)"
 
 ### Windows (Winghostty)
 
-> **Prerequisites:** [Git](https://git-scm.com/downloads/win) installed.
+> **前提条件:** [Git](https://git-scm.com/downloads/win) がインストール済みであること。
 
 ```powershell
-# 1. Install Winghostty
+# 1. Winghostty をインストール
 winget install AmanThanvi.winghostty
 
-# 2. Clone this repo and run setup
+# 2. リポジトリをクローンしてセットアップ
 git clone https://github.com/maton369/ghostty-config.git $env:TEMP\ghostty-config
 & $env:TEMP\ghostty-config\setup-windows.ps1
 
-# 3. Reload Winghostty config: Ctrl+Shift+,
+# 3. Winghostty の設定をリロード: Ctrl+Shift+,
 ```
 
-The setup copies shaders to `%LOCALAPPDATA%\winghostty\shaders\` and creates the config at `%LOCALAPPDATA%\winghostty\config.ghostty`.
+セットアップスクリプトは `%LOCALAPPDATA%\winghostty\shaders\` にシェーダーをコピーし、`%LOCALAPPDATA%\winghostty\config.ghostty` に設定ファイルを生成します。
 
-#### Theme switching on Windows
+#### Windows でのテーマ切り替え
 
 ```powershell
-# Add to your PowerShell profile ($PROFILE):
+# PowerShell プロファイル ($PROFILE) にエイリアスを追加:
 Set-Alias ghostty-theme "$env:LOCALAPPDATA\winghostty\shader-theme.ps1"
 ```
 
-Then:
+使い方：
 ```powershell
-ghostty-theme next          # Next background theme
-ghostty-theme prev          # Previous background theme
-ghostty-theme space         # Switch to specific theme
-ghostty-theme list          # List all themes
+ghostty-theme next          # 次の背景テーマ
+ghostty-theme prev          # 前の背景テーマ
+ghostty-theme space         # テーマを名前で指定
+ghostty-theme list          # テーマ一覧
 
-ghostty-theme fx next       # Next cursor preset
-ghostty-theme fx prev       # Previous cursor preset
-ghostty-theme fx list       # List all presets
+ghostty-theme fx next       # 次のカーソルプリセット
+ghostty-theme fx prev       # 前のカーソルプリセット
+ghostty-theme fx list       # プリセット一覧
 ```
 
-After switching, reload Winghostty with `Ctrl+Shift+,`.
+テーマ切り替え後は `Ctrl+Shift+,` で設定をリロードしてください。
 
-## Keybinding Summary
+## キーバインド一覧
 
-| Key | Action | Platform |
-|-----|--------|----------|
-| `Ctrl+N` | Next background theme | macOS (zsh) |
-| `Ctrl+P` | Previous background theme | macOS (zsh) |
-| `Ctrl+F` | Next cursor effect preset | macOS (zsh) |
-| `Ctrl+B` | Previous cursor effect preset | macOS (zsh) |
-| `Ctrl+Shift+,` | Reload config | Windows (Winghostty) |
+| キー | 操作 | プラットフォーム |
+|------|------|-----------------|
+| `Ctrl+N` | 次の背景テーマ | macOS (zsh) |
+| `Ctrl+P` | 前の背景テーマ | macOS (zsh) |
+| `Ctrl+F` | 次のカーソルエフェクト | macOS (zsh) |
+| `Ctrl+B` | 前のカーソルエフェクト | macOS (zsh) |
+| `Ctrl+Shift+,` | 設定リロード | Windows (Winghostty) |
 
-## CLI Usage (macOS)
+## CLI の使い方（macOS）
 
 ```bash
-shader-theme.sh next              # Next theme
-shader-theme.sh prev              # Previous theme
-shader-theme.sh list              # List themes (* = current)
-shader-theme.sh <name>            # Switch to theme by name
+shader-theme.sh next              # 次のテーマ
+shader-theme.sh prev              # 前のテーマ
+shader-theme.sh list              # テーマ一覧（* が現在のテーマ）
+shader-theme.sh <テーマ名>         # テーマを名前で指定
 
-shader-theme.sh fx next           # Next cursor preset
-shader-theme.sh fx prev           # Previous cursor preset
-shader-theme.sh fx list           # List presets
-shader-theme.sh fx <name>         # Switch to preset by name
+shader-theme.sh fx next           # 次のカーソルプリセット
+shader-theme.sh fx prev           # 前のカーソルプリセット
+shader-theme.sh fx list           # プリセット一覧
+shader-theme.sh fx <プリセット名>  # プリセットを名前で指定
 ```
 
-## How It Works
+## 仕組み
 
-`shader-theme.sh` (bash) and `shader-theme.ps1` (PowerShell) rewrite the Ghostty/Winghostty config file, replacing `custom-shader` lines while preserving non-shader settings. On macOS, it sends `SIGUSR2` to Ghostty for hot-reload. On Windows, manual reload with `Ctrl+Shift+,` is required.
+`shader-theme.sh`（bash）と `shader-theme.ps1`（PowerShell）は Ghostty / Winghostty の設定ファイルを書き換え、`custom-shader` 行を差し替えつつ、シェーダー以外の設定はそのまま保持します。macOS では `SIGUSR2` シグナルで Ghostty をホットリロードします。Windows では `Ctrl+Shift+,` で手動リロードが必要です。
 
-The `shaders-toggle.sh` script comments/uncomments shader lines when entering/exiting terminal editors, so shaders don't interfere with text editing.
+`shaders-toggle.sh` はエディタに入る / 出るときにシェーダー行をコメントアウト / コメント解除し、テキスト編集の邪魔にならないようにします。
 
-## Black Hole
+## ブラックホール
 
-The "space" theme includes a black hole effect from [s0xDk/ghostty-blackhole](https://github.com/s0xDk/ghostty-blackhole). Both setup scripts clone it automatically.
+「space」テーマには [s0xDk/ghostty-blackhole](https://github.com/s0xDk/ghostty-blackhole) のブラックホールエフェクトが含まれます。両プラットフォームのセットアップスクリプトが自動でクローンします。
 
-## Credits
+## クレジット
 
-Shaders collected from:
+シェーダーの出典：
 
-- [0xhckr/ghostty-shaders](https://github.com/0xhckr/ghostty-shaders) — water, gradient, snow, fireworks, cubes, gears, ghost, fire, lava, dither, tft, bettercrt, in-game-crt, retro-terminal, rgbsplit
+- [0xhckr/ghostty-shaders](https://github.com/0xhckr/ghostty-shaders) — water, gradient, snow, fireworks, gears, fire, dither, tft, bettercrt, in-game-crt, retro-terminal, rgbsplit
 - [snedea/ghostty-themes](https://github.com/snedea/ghostty-themes) — sakura, cyberpunk, neon-vhs, pipboy, noir
 - [fielding/ghostty-shader-adventures](https://github.com/fielding/ghostty-shader-adventures) — electric
 - [jshiv/ghostty-shaders](https://github.com/jshiv/ghostty-shaders) — liquid-light
 - [cmmichael/ghostty-aurora](https://github.com/cmmichael/ghostty-aurora) — aurora-border
 - [Swizzzer/my-ghostty-shader](https://github.com/Swizzzer/my-ghostty-shader) — pjsk
-- [hackr-sh/ghostty-shaders](https://github.com/hackr-sh/ghostty-shaders) — starfield-colors, crt, galaxy, inside-the-matrix, underwater, bloom
+- [hackr-sh/ghostty-shaders](https://github.com/hackr-sh/ghostty-shaders) — starfield-colors, crt, inside-the-matrix
 - [hondazn/dotfiles](https://github.com/hondazn/dotfiles) — cursor_blaze, cursor_lightning, sparks, slash, gravity
-- [s0xDk/ghostty-blackhole](https://github.com/s0xDk/ghostty-blackhole) — black hole effect
+- [s0xDk/ghostty-blackhole](https://github.com/s0xDk/ghostty-blackhole) — ブラックホールエフェクト
