@@ -1,16 +1,16 @@
 # Ghostty シェーダーテーマシステム
 
-[Ghostty](https://ghostty.org/) ターミナル用の背景シェーダーテーマ 23 種とカーソルエフェクトプリセット 4 種を、キーバインドで切り替えられる仕組みです。
+[Ghostty](https://ghostty.org/) ターミナル用の背景シェーダーテーマ 18 種とカーソルエフェクトプリセット 4 種を、キーバインドで切り替えられる仕組みです。
 
-**macOS** (Ghostty) と **Windows** ([Winghostty](https://github.com/amanthanvi/winghostty)) に対応しています。
+**macOS** (Ghostty)、**Windows** ([Winghostty](https://github.com/amanthanvi/winghostty))、**WSL2** (Ghostty Linux 版) に対応しています。
 
 ## 機能
 
-- 23 種のアニメーション背景テーマをランタイムで切り替え
+- 18 種のアニメーション背景テーマをランタイムで切り替え
 - 4 種のカーソルエフェクトプリセット（背景テーマとは独立して切り替え可能）
 - エディタ起動時にシェーダーを自動オフ（nvim / vim / vi）
 - Starship プロンプト連携（現在のテーマ名・キーバインドのヒントを表示）
-- クロスプラットフォーム：macOS 用 bash スクリプト＋Windows 用 PowerShell スクリプト
+- クロスプラットフォーム：macOS / WSL 用 bash スクリプト＋Windows 用 PowerShell スクリプト
 
 ## 背景テーマ一覧
 
@@ -21,13 +21,8 @@ macOS では `Ctrl+N`（次）/ `Ctrl+P`（前）で切り替えます。
 | space | カラフル星空＋ブラックホール | 宇宙 |
 | pipboy | Fallout Pip-Boy 風グリーン CRT | CRT / レトロ |
 | retro-term | 樽型歪み＋走査線＋シアン色 | CRT / レトロ |
-| bettercrt | 樽型歪み＋走査線 | CRT / レトロ |
 | game-crt | ゲーム風 CRT（アパーチャグリル・ゴースト・ブルーム） | CRT / レトロ |
-| crt | クラシック CRT 走査線 | CRT / レトロ |
-| rgbsplit | 色収差＋脈動するグロー | CRT / レトロ |
 | tft | TFT/LCD スクリーンドア効果 | CRT / レトロ |
-| dither | 順序ディザリング（バイヤー行列ポスタライズ） | CRT / レトロ |
-| noir | フィルム・ノワール（ブラインド影・煙・フリッカー） | CRT / レトロ |
 | water | 水中コースティクス＋テキスト歪み | 自然 |
 | snow | パララックスで降る雪 | 自然 |
 | sakura | 桜の花びらが舞い落ちる＋月光 | 自然 |
@@ -42,7 +37,7 @@ macOS では `Ctrl+N`（次）/ `Ctrl+P`（前）で切り替えます。
 | pjsk | プロセカ風の回転する結晶片 | 雰囲気 |
 | minimal | シェーダーなし | - |
 
-画面を幾何学的に歪める CRT 系テーマ（pipboy, retro-term, bettercrt, game-crt, crt）では `fx_first` フラグにより、カーソルエフェクトを歪みシェーダーの前に描画し、火花がカーソル位置とずれないようにしています。
+画面を幾何学的に歪める CRT 系テーマ（pipboy, retro-term, game-crt）では `fx_first` フラグにより、カーソルエフェクトを歪みシェーダーの前に描画し、火花がカーソル位置とずれないようにしています。
 
 ## カーソルエフェクトプリセット
 
@@ -154,17 +149,50 @@ ghostty-theme fx list       # プリセット一覧
 
 テーマ切り替え後は `Ctrl+Shift+,` で設定をリロードしてください。
 
+### WSL2 (Ghostty Linux 版)
+
+> **注意:** WSL2 は Ghostty の公式サポート対象外です。WSLg の OpenGL 変換層（Mesa d3d12）との相性問題でクラッシュする環境があります。確実にネイティブ動作させたい場合は上記の Winghostty を推奨します。
+
+```bash
+# 1. WSL2 ディストリビューション内で Ghostty をインストール
+#    Ubuntu 24.04+ の場合:
+sudo snap install ghostty --classic
+#    Arch の場合:
+sudo pacman -S ghostty
+
+# 2. このリポジトリをクローン
+git clone https://github.com/maton369/ghostty-config.git ~/.config/ghostty
+
+# 3. WSL 用セットアップ実行
+~/.config/ghostty/setup-wsl.sh
+
+# 4. Ghostty を起動（WSLg 経由で Windows 上にウィンドウが開く）
+ghostty
+```
+
+テーマ・カーソルエフェクトの切り替えは macOS と同じ `shader-theme.sh` を使います（テーマ構成も完全に同一）。`SIGUSR2` によるホットリロードも Linux 版 Ghostty で動作するため、キーバインド設定（前述の zsh スニペット）もそのまま使えます。bash の場合は zle の代わりに `bind -x` で同等の設定が可能です。
+
+#### 起動時にクラッシュする場合
+
+WSLg の GPU パススルーが機能していない環境では、ソフトウェアレンダリングで起動できます（シェーダーは動作しますが重くなります）：
+
+```bash
+LIBGL_ALWAYS_SOFTWARE=true GALLIUM_DRIVER=llvmpipe ghostty
+```
+
+GPU が使えているかは `glxinfo -B | grep renderer` で確認できます（`D3D12` と出れば GPU、`llvmpipe` ならソフトウェアレンダリング）。
+
 ## キーバインド一覧
 
 | キー | 操作 | プラットフォーム |
 |------|------|-----------------|
-| `Ctrl+N` | 次の背景テーマ | macOS (zsh) |
-| `Ctrl+P` | 前の背景テーマ | macOS (zsh) |
-| `Ctrl+F` | 次のカーソルエフェクト | macOS (zsh) |
-| `Ctrl+B` | 前のカーソルエフェクト | macOS (zsh) |
+| `Ctrl+N` | 次の背景テーマ | macOS / WSL (zsh) |
+| `Ctrl+P` | 前の背景テーマ | macOS / WSL (zsh) |
+| `Ctrl+F` | 次のカーソルエフェクト | macOS / WSL (zsh) |
+| `Ctrl+B` | 前のカーソルエフェクト | macOS / WSL (zsh) |
 | `Ctrl+Shift+,` | 設定リロード | Windows (Winghostty) |
 
-## CLI の使い方（macOS）
+## CLI の使い方（macOS / WSL）
 
 ```bash
 shader-theme.sh next              # 次のテーマ
@@ -192,8 +220,8 @@ shader-theme.sh fx <プリセット名>  # プリセットを名前で指定
 
 シェーダーの出典：
 
-- [0xhckr/ghostty-shaders](https://github.com/0xhckr/ghostty-shaders) — water, gradient, snow, fireworks, gears, fire, dither, tft, bettercrt, in-game-crt, retro-terminal, rgbsplit
-- [snedea/ghostty-themes](https://github.com/snedea/ghostty-themes) — sakura, cyberpunk, neon-vhs, pipboy, noir
+- [0xhckr/ghostty-shaders](https://github.com/0xhckr/ghostty-shaders) — water, gradient, snow, fireworks, gears, fire, tft, in-game-crt, retro-terminal
+- [snedea/ghostty-themes](https://github.com/snedea/ghostty-themes) — sakura, cyberpunk, neon-vhs, pipboy
 - [fielding/ghostty-shader-adventures](https://github.com/fielding/ghostty-shader-adventures) — electric
 - [jshiv/ghostty-shaders](https://github.com/jshiv/ghostty-shaders) — liquid-light
 - [cmmichael/ghostty-aurora](https://github.com/cmmichael/ghostty-aurora) — aurora-border
