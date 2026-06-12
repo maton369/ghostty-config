@@ -18,21 +18,23 @@ CURSOR_PRESETS=(
   "none:"
 )
 
-# theme = (display_name:background_shader:include_blackhole)
+# theme = (display_name:background_shader:include_blackhole[:fx_first])
+# fx_first=1 — テーマが画面を幾何学的に歪める (CRT カーブ等) 場合、
+# カーソルエフェクトを先に描画してから歪ませることで火花の位置を文字と一致させる
 THEMES=(
   "space:$SHADERS/starfield-colors.glsl:1"
-  "matrix:$SHADERS/inside-the-matrix.glsl:0"
+  "pipboy:$SHADERS/pipboy.glsl:0:1"
   "water:$SHADERS/water.glsl:0"
-  "gradient:$SHADERS/gradient.glsl:0"
   "snow:$SHADERS/snow.glsl:0"
-  "fireworks:$SHADERS/fireworks.glsl:0"
   "cyberpunk:$SHADERS/cyberpunk.glsl:0"
-  "sakura:$SHADERS/sakura.glsl:0"
   "liquid:$SHADERS/liquid-light.glsl:0"
+  "matrix:$SHADERS/inside-the-matrix.glsl:0"
+  "gradient:$SHADERS/gradient.glsl:0"
+  "fireworks:$SHADERS/fireworks.glsl:0"
+  "sakura:$SHADERS/sakura.glsl:0"
   "gears:$SHADERS/gears.glsl:0"
   "fire:$SHADERS/fire.glsl:0"
   "neon-vhs:$SHADERS/neon-vhs.glsl:0"
-  "pipboy:$SHADERS/pipboy.glsl:0"
   "pjsk:$SHADERS/pjsk.glsl:0"
   "minimal::0"
 )
@@ -55,26 +57,30 @@ reload_ghostty() {
   done
 }
 
+emit_cursor_shaders() {
+  IFS=',' read -ra fx_arr <<< "$(get_cursor_shaders)"
+  for s in "${fx_arr[@]}"; do
+    [ -n "$s" ] && echo "custom-shader = $s"
+  done
+}
+
 write_config() {
   local theme_idx=$1
   local entry="${THEMES[$theme_idx]}"
-  local name="${entry%%:*}"
-  local rest="${entry#*:}"
-  local bg="${rest%%:*}"
-  local bh="${rest##*:}"
+  local name bg bh fx_first
+  IFS=':' read -r name bg bh fx_first <<< "$entry"
 
   local header
   header=$(grep -v '^custom-shader\|^#custom-shader\|^custom-shader-animation\|^#custom-shader-animation' "$CONFIG")
 
   {
     echo "$header"
+    # fx_first: draw cursor effects before the warping theme shader so they
+    # get warped together with the screen and stay aligned with the cursor
+    [ "$fx_first" = "1" ] && emit_cursor_shaders
     [ -n "$bg" ] && echo "custom-shader = $bg"
     [ "$bh" = "1" ] && echo "custom-shader = $BLACKHOLE"
-    # cursor shaders from current preset
-    IFS=',' read -ra fx_arr <<< "$(get_cursor_shaders)"
-    for s in "${fx_arr[@]}"; do
-      [ -n "$s" ] && echo "custom-shader = $s"
-    done
+    [ "$fx_first" != "1" ] && emit_cursor_shaders
     echo "custom-shader-animation = true"
   } > "$CONFIG"
 
